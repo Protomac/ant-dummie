@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ReactDOM from "react-dom"
 import PageHeaderWrapper from '../../../components/PageHeaderWrapper'
 import {
     Drawer,
@@ -8,6 +9,7 @@ import {
     DatePicker,
     Select,
     notification,
+    Carousel,
     Switch,
     Upload, Button, Icon
 } from 'antd'
@@ -30,8 +32,16 @@ const Option = Select.Option
 class AllCar extends Component {
 
     state = {
-        visible: false, loading: false, disabled: true, uploadData: null, totalCar: '', allDealers: [],
-        dealerId: '', time: {
+        visible: false,
+        loading: false,
+        disabled: true,
+        uploadData: null,
+        totalCar: '',
+        media: [],
+        allDealers: [],
+        visible: false,
+        dealerId: '',
+        time: {
             key: 'createdAt',
             from: null,
             to: null
@@ -75,6 +85,21 @@ class AllCar extends Component {
 
     }
 
+
+    carImage = async ({_id}) => {
+
+        this.setState({loading: true})
+
+        let {media} = await Request.carImage({_id})
+        this.setState({media: media})
+        this.setState({loading: false})
+
+        this.reload()
+
+
+    }
+
+
     constructor(props) {
         super(props)
         this.table = React.createRef()
@@ -113,9 +138,19 @@ class AllCar extends Component {
 
     }
 
+
+    onClose = () => {
+        this.setState({
+            visible: false,
+        });
+    };
+
+
     render() {
         const {dispatch} = this.props
-        const {visible, disabled, loading, dealerId, allDealers} = this.state
+        const {
+            visible, disabled, loading, dealerId, allDealers, media
+        } = this.state
         const columns = [
             {
                 title: 'CarName',
@@ -219,6 +254,17 @@ class AllCar extends Component {
                                 dispatch(getPushPathWrapper('cars.editMake', {id: val._id}))
                             }} icon="edit"/>
                         </Tooltip>
+                        <Tooltip title="View Car">
+                            <Button shape="circle" onClick={async () => {
+                                await    this.carImage(val)
+
+                                this.setState({
+                                    visible: true,
+                                });
+
+                            }} icon="car"/>
+
+                        </Tooltip>
 
                         <Tooltip title="Delete Car">
                             <Popconfirm title="Are you sure delete this Car?" onConfirm={() => {
@@ -289,9 +335,28 @@ class AllCar extends Component {
                 </Card>
 
                 <Card bordered={true}>
-                    <TableComp ref={this.table} columns={columns} extraProps={{loading, scroll: {x: 1000}}}
+                    <TableComp ref={this.table} columns={columns}
+                               extraProps={{loading, scroll: {x: 1000}}}
                                apiRequest={(params) => this.apiRequest(params, columns, dealerId)}/>
                 </Card>
+
+                <Drawer
+                    title="Car Images"
+                    width={600}
+                    closable={false}
+                    onClose={this.onClose}
+                    visible={this.state.visible}>
+                    <div><Carousel >
+                        {media.map((v, k) => {
+                            return <div key={k}>
+                                <img style={{width: '100%'}} src={v.url}/>
+                            </div>
+                        })}
+
+
+                    </Carousel></div>
+
+                </Drawer>
 
             </PageHeaderWrapper>)
 

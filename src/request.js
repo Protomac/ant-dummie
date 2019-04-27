@@ -492,6 +492,7 @@ class Request {
     }
 
 
+
     deleteDealer(data) {
         return new Promise((next) => {
             authAxios.delete('/backOffice/dealer/' + data._id, getToken())
@@ -517,6 +518,20 @@ class Request {
 
         })
     }
+
+    carImage(data) {
+        return new Promise((next) => {
+            authAxios.post('/backOffice/car/getCarImage', data, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
 }
+
 
 export default new Request()
