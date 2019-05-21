@@ -492,7 +492,6 @@ class Request {
     }
 
 
-
     deleteDealer(data) {
         return new Promise((next) => {
             authAxios.delete('/backOffice/dealer/' + data._id, getToken())

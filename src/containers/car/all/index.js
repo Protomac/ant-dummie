@@ -26,9 +26,11 @@ import {apiUrl} from '../../../settings'
 // import { TableComp } from 'sz-react-utils'
 import TableComp from '../../../components/_utils/table'
 import {getPushPathWrapper, getUrlParams} from '../../../routes'
+
 const {RangePicker} = DatePicker
 
 const Option = Select.Option
+
 class AllCar extends Component {
 
     state = {
@@ -39,13 +41,13 @@ class AllCar extends Component {
         totalCar: '',
         media: [],
         allDealers: [],
-        visible: false,
         dealerId: '',
         time: {
             key: 'createdAt',
             from: null,
             to: null
-        }
+        },
+        item: []
     }
 
     reload = () => {
@@ -91,8 +93,9 @@ class AllCar extends Component {
         this.setState({loading: true})
 
         let {media} = await Request.carImage({_id})
-        this.setState({media: media})
-        this.setState({loading: false})
+
+        this.setState({media: media.media, item: media, loading: false})
+
 
         this.reload()
 
@@ -149,7 +152,7 @@ class AllCar extends Component {
     render() {
         const {dispatch} = this.props
         const {
-            visible, disabled, loading, dealerId, allDealers, media
+            visible, disabled, loading, dealerId, allDealers, media, item
         } = this.state
         const columns = [
             {
@@ -256,7 +259,7 @@ class AllCar extends Component {
                         </Tooltip>
                         <Tooltip title="View Car">
                             <Button shape="circle" onClick={async () => {
-                                await    this.carImage(val)
+                                await this.carImage(val)
 
                                 this.setState({
                                     visible: true,
@@ -346,7 +349,7 @@ class AllCar extends Component {
                     closable={false}
                     onClose={this.onClose}
                     visible={this.state.visible}>
-                    <div><Carousel >
+                    <div><Carousel>
                         {media.map((v, k) => {
                             return <div key={k}>
                                 <img style={{width: '100%'}} src={v.url}/>
@@ -354,9 +357,34 @@ class AllCar extends Component {
                         })}
 
 
-                    </Carousel></div>
+                    </Carousel>
+                        <div>
+                            <ul style={{listStyle: 'none', padding: 10}}>
+                                <li style={{margin: 7}}>
+                                    Make: {item && item.make && item.make.name}
+
+                                </li>
+                                <li style={{margin: 7}}>
+                                    Model: {item && item.model && item.model.name}
+
+                                </li>
+                                <li style={{margin: 7}}>
+                                    FuelType: {item && item.fuelType && item.fuelType.name}
+
+                                </li>
+                                <li style={{margin: 7}}>
+                                    Year: {item && item.manufactureYear}
+
+                                </li>
+                            </ul>
+
+
+                        </div>
+                    </div>
+
 
                 </Drawer>
+
 
             </PageHeaderWrapper>)
 
