@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Tabs, Skeleton } from 'antd'
+import { Tabs, Skeleton, Button } from 'antd'
 import classNames from 'classnames'
 import styles from './index.less'
 import BreadcrumbView from './breadcrumb'
@@ -53,6 +53,14 @@ export default class PageHeader extends PureComponent {
               {logo && <div className={styles.logo}>{logo}</div>}
               <div className={styles.main}>
                 <div className={styles.row}>
+                  <Button
+                    type="dashed"
+                    onClick={this.props.goBack}
+                    shape="circle"
+                    icon="arrow-left"
+                    style={{ marginRight: 10 }}
+                  />
+
                   {title && <h1 className={styles.title}>{title}</h1>}
                   {action && <div className={styles.action}>{action}</div>}
                 </div>

@@ -5,13 +5,17 @@ import { connect } from 'react-redux'
 import GridContent from './GridContent'
 import styles from './index.less'
 import MenuContext from '../../layouts/MenuContext'
+import { goBack } from 'connected-react-router'
 
-const PageHeaderWrapper = ({ children, contentWidth, wrapperClassName, top, ...restProps }) => (
+const PageHeaderWrapper = ({ children, contentWidth, wrapperClassName, dispatch, top, ...restProps }) => (
   <div style={{ margin: '-24px -24px 0' }} className={wrapperClassName}>
     {top}
     <MenuContext.Consumer>
       {value => (
         <PageHeader
+          goBack={() => {
+            dispatch(goBack())
+          }}
           wide={contentWidth === 'Fixed'}
           home={'Home'}
           {...value}
@@ -32,6 +36,16 @@ const PageHeaderWrapper = ({ children, contentWidth, wrapperClassName, top, ...r
   </div>
 )
 
-export default connect(({ theme }) => ({
+const mapStateToProps = ({ theme }) => ({
   contentWidth: theme.contentWidth
-}))(PageHeaderWrapper)
+})
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PageHeaderWrapper)

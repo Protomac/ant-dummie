@@ -35,7 +35,6 @@ class HeaderView extends PureComponent {
 
     }
 
-
   }
 
   componentWillUnmount () {
@@ -81,7 +80,8 @@ class HeaderView extends PureComponent {
     if (!autoHideHeader) {
       return
     }
-    const scrollTop = document.body.scrollTop + document.documentElement.scrollTop
+    const scrollTop = document.body.scrollTop +
+      document.documentElement.scrollTop
     if (!this.ticking) {
       this.ticking = true
       requestAnimationFrame(() => {
@@ -111,7 +111,8 @@ class HeaderView extends PureComponent {
     const isTop = layout === 'topmenu'
     const width = this.getHeadWidth()
     const HeaderDom = visible ? (
-      <Header style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
+      <Header style={{ padding: 0, width }}
+              className={fixedHeader ? styles.fixedHeader : ''}>
         {isTop && !isMobile ? (
           <TopNavHeader
             theme={navTheme}

@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
-import {
-  Table,
-  Input, Button, Icon
-} from 'antd'
+import { Button, DatePicker, Icon, Input, Table } from 'antd'
 import _ from 'lodash'
 import Highlighter from 'react-highlight-words'
 import memoizeOne from 'memoize-one'
 import S from 'string'
 
-class TableMain extends Component {
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker
 
+class TableMain extends Component {
   state = {
     data: [],
     size: 'small',
@@ -17,7 +15,8 @@ class TableMain extends Component {
     pagination: {},
     loading: true,
     searchText: '',
-    dataSearchParams: {}
+    dataSearchParams: {},
+    dateFilters: {}
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -36,7 +35,6 @@ class TableMain extends Component {
   }
 
   fetch = async (params = {}) => {
-
     this.setState({
       loading: true,
       dataSearchParams: params
@@ -52,75 +50,153 @@ class TableMain extends Component {
       loading: false,
       data: data.data,
       pagination
-
     })
-
   }
 
-  getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: (pro) => {
-      let {
-        setSelectedKeys,
-        selectedKeys,
-        confirm,
-        clearFilters
-      } = pro
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: pro => {
+      let { setSelectedKeys, selectedKeys, confirm, clearFilters } = pro
 
-      return (<div style={{
-        padding: '8px',
-        borderRadius: '4px',
-        backgroundColor: '#ffffff',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, .15)'
-      }
-      }>
-        <Input
-          ref={node => {
-            this.searchInput = node
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => {
-            console.log(clearFilters)
-            this.handleReset(clearFilters)
-          }}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>)
+      return (
+        <div
+          style={{
+            padding: '8px',
+            borderRadius: '4px',
+            backgroundColor: '#ffffff',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, .15)'
+          }}>
+          <Input
+            ref={node => {
+              this.searchInput = node
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={e =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type="primary"
+            onClick={() => this.handleSearch(selectedKeys, confirm)}
+            icon="search"
+            size="small"
+            style={{ width: 90, marginRight: 8 }}>
+            Search
+          </Button>
+          <Button
+            onClick={() => {
+              this.handleReset(clearFilters)
+            }}
+            size="small"
+            style={{ width: 90 }}>
+            Reset
+          </Button>
+        </div>
+      )
     },
-    filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }}/>,
-    onFilterDropdownVisibleChange: (visible) => {
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }}/>
+    ),
+    onFilterDropdownVisibleChange: visible => {
       if (visible) {
         setTimeout(() => this.searchInput.select())
       }
     },
-    render: (text) => {
+    render: text => {
       return (
         <React.Fragment>
-          {!!text ? (<Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[this.state.searchText]}
-            autoEscape
-            textToHighlight={text.toString()}
-          />) : null}
+          {!!text ? (
+            <Highlighter
+              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+              searchWords={[this.state.searchText]}
+              autoEscape
+              textToHighlight={text.toString()}
+            />
+          ) : null}
         </React.Fragment>
       )
+    }
+  })
+
+  getColumnDateSearchProps = dataIndex => ({
+    filterDropdown: pro => {
+      let { setSelectedKeys, selectedKeys, confirm, clearFilters } = pro
+
+      return (
+        <div
+          style={{
+            padding: '8px',
+            borderRadius: '4px',
+            backgroundColor: '#ffffff',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, .15)'
+          }}>
+          <RangePicker
+            style={{ width: 250, marginBottom: 8, display: 'block' }}
+            ref={node => {
+              this.searchInput = node
+            }}
+            onChange={date => {
+              setSelectedKeys({
+                $gte: date[0].startOf('day').toDate(),
+                $lt: date[1].endOf('day').toDate()
+              })
+            }}
+          />
+
+          <div style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <Button
+              type="primary"
+              onClick={() => {
+                let dateFilters = _.clone(this.state.dateFilters)
+
+                dateFilters[dataIndex] = true
+
+                this.setState({
+                  dateFilters
+                })
+
+                confirm()
+              }}
+              icon="search"
+              size="small"
+              style={{ width: 90, marginRight: 8 }}>
+              Search
+            </Button>
+            <Button
+              onClick={() => {
+                let dateFilters = _.clone(this.state.dateFilters)
+
+                dateFilters[dataIndex] = false
+
+                this.setState({
+                  dateFilters
+                })
+                clearFilters()
+              }}
+              size="small"
+              style={{ width: 90 }}>
+              Reset
+            </Button>
+          </div>
+        </div>
+      )
+    },
+    filterIcon: x => {
+      let { dateFilters } = this.state
+      let filtered = dateFilters && dateFilters[dataIndex]
+      return (
+        <Icon
+          type="search"
+          style={{ color: filtered ? '#1890ff' : undefined }}
+        />
+      )
+    },
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.focus())
+      }
     }
   })
 
@@ -129,22 +205,19 @@ class TableMain extends Component {
     this.setState({ searchText: selectedKeys[0] })
   }
 
-  handleReset = (clearFilters) => {
+  handleReset = clearFilters => {
     clearFilters()
     this.setState({ searchText: '' })
   }
 
   reload = () => {
-
-    if (!!this.props.apiRequest) {
+    let { apiRequest } = this.props
+    if (!!apiRequest) {
       this.fetch(this.state.dataSearchParams)
     }
-
   }
 
   setDataState = async () => {
-
-
   }
 
   constructor (props) {
@@ -152,8 +225,40 @@ class TableMain extends Component {
     this.fetch2 = memoizeOne(this.fetch)
   }
 
-  componentDidMount () {
+  componentDidUpdate (prevProps) {
+    if (!_.isEqual(this.props.columns, prevProps.columns)) {
 
+      let x = []
+      _.each(this.props.columns, i => {
+        if (i.searchTextName) {
+          i = { ...this.getColumnSearchProps(i.searchTextName), ...i }
+        }
+
+        if (i.searchDateName) {
+          i = { ...this.getColumnDateSearchProps(i.searchDateName), ...i }
+        }
+
+        if (
+          i.dataIndex === undefined &&
+          i.key !== 'actions' &&
+          i.type !== 'actions'
+        ) {
+          i.dataIndex = i.key
+        }
+
+        if (i.title === undefined) {
+          i.title = S(i.dataIndex).humanize().titleCase().s
+        }
+        x.push(i)
+      })
+      this.setState({
+        columns: x
+      })
+
+    }
+  }
+
+  componentDidMount () {
     let { pagination, apiRequest } = this.props
 
     if (!pagination) {
@@ -163,14 +268,20 @@ class TableMain extends Component {
     }
 
     let x = []
-    _.each(this.props.columns, (i) => {
-
-
+    _.each(this.props.columns, i => {
       if (i.searchTextName) {
         i = { ...this.getColumnSearchProps(i.searchTextName), ...i }
       }
 
-      if (i.dataIndex === undefined && i.key !== 'actions' && i.type !== 'actions') {
+      if (i.searchDateName) {
+        i = { ...this.getColumnDateSearchProps(i.searchDateName), ...i }
+      }
+
+      if (
+        i.dataIndex === undefined &&
+        i.key !== 'actions' &&
+        i.type !== 'actions'
+      ) {
         i.dataIndex = i.key
       }
 
@@ -178,9 +289,7 @@ class TableMain extends Component {
         i.title = S(i.dataIndex).humanize().titleCase().s
       }
       x.push(i)
-
     })
-
     this.setState({
       columns: x
     })
@@ -190,21 +299,24 @@ class TableMain extends Component {
         results: pagination.defaultPageSize
       })
     }
-
   }
 
   renderDynamic () {
     const { columns } = this.state
     const { extraProps, reloadButon } = this.props
+    console.log('table is rendering ')
     return (
       <React.Fragment>
-
         <div style={{ marginBottom: 10 }}>
-          {reloadButon ?
+          {reloadButon ? (
             <Button
-              shape="circle" onClick={() => {
-              this.reload()
-            }} icon="reload"/> : null}
+              shape="circle"
+              onClick={() => {
+                this.reload()
+              }}
+              icon="reload"
+            />
+          ) : null}
         </div>
 
         <Table
@@ -234,13 +346,16 @@ class TableMain extends Component {
     const { extraProps, dataSource, reloadButon } = this.props
     return (
       <React.Fragment>
-
         <div style={{ marginBottom: 10 }}>
-          {reloadButon ?
+          {reloadButon ? (
             <Button
-              shape="circle" onClick={() => {
-              this.reload()
-            }} icon="reload"/> : null}
+              shape="circle"
+              onClick={() => {
+                this.reload()
+              }}
+              icon="reload"
+            />
+          ) : null}
         </div>
 
         <Table
@@ -258,24 +373,22 @@ class TableMain extends Component {
             ...this.props.pagination
           }}
           onChange={() => {
-
           }}
           loading={this.props.loading}
         />
-
       </React.Fragment>
     )
   }
 
   render () {
-
     const { apiRequest } = this.props
+
     return (
-      <React.Fragment>{!!apiRequest ? this.renderDynamic() : this.renderStatic()}</React.Fragment>
+      <React.Fragment>
+        {!!apiRequest ? this.renderDynamic() : this.renderStatic()}
+      </React.Fragment>
     )
   }
-
 }
-
 
 export default TableMain

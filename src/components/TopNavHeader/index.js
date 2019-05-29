@@ -12,7 +12,8 @@ export default class TopNavHeader extends PureComponent {
 
   static getDerivedStateFromProps (props) {
     return {
-      maxWidth: (props.contentWidth === 'Fixed' ? 1200 : window.innerWidth) - 280 - 165 - 40
+      maxWidth: (props.contentWidth === 'Fixed' ? 1200 : window.innerWidth) -
+      280 - 165 - 40
     }
   }
 
@@ -21,18 +22,22 @@ export default class TopNavHeader extends PureComponent {
     const { maxWidth } = this.state
     const flatMenuKeys = getFlatMenuKeys(menuData)
     return (
-      <div className={`${styles.head} ${navTheme === 'light' ? styles.light : ''}`}>
+      <div className={`${styles.head} ${navTheme === 'light'
+        ? styles.light
+        : ''}`}>
         <div
           ref={ref => {
             this.maim = ref
           }}
-          className={`${styles.main} ${contentWidth === 'Fixed' ? styles.wide : ''}`}
+          className={`${styles.main} ${contentWidth === 'Fixed'
+            ? styles.wide
+            : ''}`}
         >
           <div className={styles.left}>
             <div className={styles.logo} key="logo" id="logo">
               <Link to="/">
                 <img src={logo} alt="logo"/>
-                <h1>Ant asdfsdaf </h1>
+                <h1>{this.props.title} </h1>
               </Link>
             </div>
             <div
@@ -40,7 +45,8 @@ export default class TopNavHeader extends PureComponent {
                 maxWidth
               }}
             >
-              <BaseMenu {...this.props} flatMenuKeys={flatMenuKeys} className={styles.menu}/>
+              <BaseMenu {...this.props} flatMenuKeys={flatMenuKeys}
+                        className={styles.menu}/>
             </div>
           </div>
           <RightContent {...this.props} />
