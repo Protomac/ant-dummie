@@ -4,8 +4,11 @@ import Path from 'path-parser'
 
 import Dashboard from './containers/dashboard'
 import Undercons from './containers/undercons'
+import AllCust from './containers/customers/all'
+import AddCust from './containers/customers/add'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
+import ListTicket from './containers/ticketList'
 
 const menu = [
   {
@@ -44,7 +47,37 @@ const menu = [
         'component': AllUsers
       }
     ]
-  }
+  },
+  {
+    'path': '/customers',
+    'name': 'Customers',
+    'icon': 'user',
+    'key': 'customers',
+    'component': Undercons,
+    'authority': [
+      'admin',
+      'user'
+    ],
+    'children': [
+      {
+        'path': '/customers/add',
+        'name': 'Add Customer',
+        'title': 'Add Customer',
+        'component': AddCust
+      },
+    ]
+  },
+  {
+    'path': '/ticketList',
+    'name': 'Tickets List',
+    'icon': 'Ticket List',
+    'key': 'ticketList',
+    'component': ListTicket,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
 ]
 
 //<editor-fold desc="Functions Exports">

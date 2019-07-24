@@ -32,7 +32,7 @@ class Request {
     login(data) {
         return new Promise((next, error) => {
             authAxios
-                .post('/loginadmin', data)
+                .post('/login', data)
                 .then((d) => {
                     next(d.data)
                 })
@@ -74,6 +74,20 @@ class Request {
         })
     }
 
+    addCust(data) {
+        return new Promise((next) => {
+            authAxios
+                .post('/register/customer', {...data}, getToken())
+                .then((d) => {
+                    next(d.data)
+                })
+                .catch((err) => {
+                    next({error: true, err})
+                    this.error(err)
+                })
+
+        })
+    }
 
     addInstitution(data) {
         return new Promise((next) => {
@@ -530,7 +544,22 @@ class Request {
 
         })
     }
-}
 
+    getAllTickets(data) {
+        return new Promise((next) => {
+            authAxios
+                .get('/admin/tickets', {params: {...data}}, getToken())
+                .then((d) => {
+                    next(d.data)
+
+                })
+                .catch((err) => {
+                    next({error: true, err})
+                    this.error(err)
+                })
+
+        })
+}
+}
 
 export default new Request()
