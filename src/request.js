@@ -32,7 +32,7 @@ class Request {
     login(data) {
         return new Promise((next, error) => {
             authAxios
-                .post('/loginadmin', data)
+                .post('/login', data)
                 .then((d) => {
                     next(d.data)
                 })
@@ -74,6 +74,50 @@ class Request {
         })
     }
 
+    addEmployee(data) {
+        return new Promise((next) => {
+            authAxios
+                .post('/addEmployee', {...data}, getToken())
+                .then((d) => {
+                    console.log(d);
+                    next(d.data)
+                })
+                .catch((err) => {
+                    next({error: true, err})
+                    this.error(err)
+                })
+
+        })
+    }
+
+    updateEmployee(id,data) {
+        return new Promise((next) => {
+            authAxios
+                .put('/employee/'+id, {...data}, getToken())
+                .then((d) => {
+                    console.log(d);
+                    next(d.data)
+                })
+                .catch((err) => {
+                    next({error: true, err})
+                    this.error(err)
+                })
+
+        })
+    }
+
+    getAllEmp(data){
+        return new Promise((next) =>{
+            authAxios
+                .get('/getAllEmployees',getToken())
+                .then((data)=>{
+                    next(data)
+                })
+                .catch(err=>{
+                    next({error:true,err})
+                })
+        })
+    }
 
     addInstitution(data) {
         return new Promise((next) => {

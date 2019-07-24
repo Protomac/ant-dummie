@@ -6,6 +6,10 @@ import Dashboard from './containers/dashboard'
 import Undercons from './containers/undercons'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
+import AddEmployee from './containers/Employee/all'
+import UpdateEmployee from './containers/Employee/update'
+import AllEmployee from './containers/Employee/all'
+
 
 const menu = [
   {
@@ -17,7 +21,7 @@ const menu = [
     'component': Dashboard,
     'authority': [
       'admin',
-      'user'
+      'emp'
     ]
   },
   {
@@ -42,6 +46,37 @@ const menu = [
         'name': 'All Users',
         'title': 'All Users',
         'component': AllUsers
+      }
+    ]
+  },
+  {
+    'path': '/employee',
+    'name': 'Employee',
+    'icon': 'user',
+    'key': 'employees',
+    'component': Undercons,
+    'authority': [
+      'admin',
+      'user'
+    ],
+    'children': [
+      {
+        'path': '/employee/add',
+        'name': 'Add Employee',
+        'title': 'Add Employee',
+        'component': AddEmployee
+      },
+      {
+        'path': '/employee/update',
+        'name': 'Update Employee',
+        'title': 'Update Employee',
+        'component': UpdateEmployee
+      },
+      {
+        'path': '/employee/all',
+        'name': 'All Employees',
+        'title': 'All Employees',
+        'component': AllEmployee
       }
     ]
   }
