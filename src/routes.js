@@ -8,7 +8,8 @@ import AllCust from './containers/customers/all'
 import AddCust from './containers/customers/add'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
-import ListTicket from './containers/ticketList'
+import allTickets from './containers/ticketList'
+import UnasssignedTickets from './containers/unassignedTickets'
 
 const menu = [
   {
@@ -68,16 +69,41 @@ const menu = [
     ]
   },
   {
-    'path': '/ticketList',
-    'name': 'Tickets List',
-    'icon': 'Ticket List',
-    'key': 'ticketList',
-    'component': ListTicket,
+    'path': '/tickets',
+    'name': 'Tickets',
+    'icon': 'tickets',
+    'key': 'tickets',
+    'component': Undercons,
     'authority': [
       'admin',
       'user'
+    ],
+    'children': [
+      {
+        'path': '/allTickets',
+        'name': 'All Tickets',
+        'icon': 'tickets',
+        'key': 'allTicket',
+        'component': allTickets,
+        'authority': [
+          'admin',
+          'user'
+        ]
+      },
+      {
+        'path': '/unassignedTickets',
+        'name': 'Unassigned Tickets',
+        'icon': 'tickets',
+        'key': 'unassignedTickets',
+        'component': UnasssignedTickets,
+        'authority': [
+          'admin',
+          'user'
+        ]
+      },
     ]
   },
+  
 ]
 
 //<editor-fold desc="Functions Exports">

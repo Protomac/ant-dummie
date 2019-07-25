@@ -31,8 +31,9 @@ class AllTickets extends Component {
 
   apiRequest = (params, columns) => {
     return new Promise(async (resolve) => {
-      let data = await Request.getAllTickets({ ...params, regExFilters: ['emailId'] })
+      let data = await Request.getAllTickets({ ...params, regExFilters: ['emailId', "empId"] })
       console.log(data[1], "000000000")
+
       resolve(data[1])
     })
   }
@@ -46,12 +47,11 @@ class AllTickets extends Component {
         dataIndex: 'emailId',
       },
       {
-        title: 'custId',
+        title: 'empId',
         dataIndex: 'empId',
         key: 'empId',
-        searchTextName: 'emailId',
-        search: 'empId'
-      }
+        searchTextName: 'empId',
+      },
     ]
     return (
       <PageHeaderWrapper
@@ -67,8 +67,8 @@ class AllTickets extends Component {
 }
 
 
-const mapStateToProps = ({ global }) => ({
-  categories: global.categories
+const mapStateToProps = ({ global}) => ({
+  categories: global.categories,
 })
 const mapDispatchToProps = dispatch => {
   return {
