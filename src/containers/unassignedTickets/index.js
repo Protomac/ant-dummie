@@ -24,26 +24,29 @@ import memoizeOne from 'memoize-one'
 import update from 'immutability-helper'
 import { getUrlPushWrapper } from '../../routes'
 import moment from 'moment'
+import { func } from 'prop-types';
 
 class UnassignedTickets extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      apiResponse: {
-        tickets: [],
-        emp: []
-      },
-      selected: {
-        tickets: [],
-        emp: {}
-      }
+  // constructor(props) {
+  //   super(props)
+  //   this.
+  // }
+  state = {
+    apiResponse: {
+      tickets: [],
+      emp: []
+    },
+    selected: {
+      tickets: [],
+      empId: null
     }
   }
 
   componentDidMount() {
     this.apiRequestAllEmp({ check: 'emp' }).then(() => {
       this.apiRequestUnassTicket()
+
     })
     console.log(this.state)
   }
@@ -77,14 +80,14 @@ class UnassignedTickets extends Component {
 
   assignToEmp = (params) => {
     return new Promise(async (resolve) => {
-      let array = []
       const data = {
-        array: (this.state.selected.tickets && this.state.selected.tickets.map((key)=> {
-          console.log(key)
-          array.push(key._id)
-        }))
+        array: (this.state.selected.tickets && this.state.selected.tickets.map((key)=> key._id)),
+        updates :{empId : (this.state.selected.empId && this.state.selected.empId)}
       }
-      console.log(array)
+      console.log(data)
+      let update = await Request.updateData({...data})
+      this.apiRequestUnassTicket();
+      console.log(update, this.state)
       resolve()
     })
   }
@@ -160,11 +163,17 @@ class UnassignedTickets extends Component {
         type: 'checkbox',
         onChange: (selectedRowKeys, selectedRows) => {
           console.log(`selectedRowKeys: ${typeof selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          let temp = []
+          selectedRows.map((element) => {
+            temp.push(element._id)
+          })
           let selected = {...this.state.selected}
           selected.tickets = selectedRows
           console.log(selected)
-          this.setState({...selected})
+          this.setState({selected},( element) => {
           console.log(this.state)
+
+          }) 
         },
         getCheckboxProps: record => ({
           disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -173,12 +182,15 @@ class UnassignedTickets extends Component {
       },
       emp: {
         type: 'radio',
-        onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        onChange: (selectedRowKeys, selectedRow) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRow);
           this.setState({
             selected: {
-              emp: selectedRows
+              ...this.state.selected,
+              empId: selectedRow[0].empId
             }
+          }, ()=>{
+            console.log(this.state.selected)
           })
         },
         getCheckboxProps: record => ({

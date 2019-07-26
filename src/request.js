@@ -137,6 +137,23 @@ class Request {
 
         })
     }
+
+    updateData(data){
+        return new Promise((next) => {
+            console.log(data)
+            authAxios
+                .put('/admin/tickets', data , getToken())
+                .then((d) => {
+                    next(d.data)
+
+                })
+                .catch((err) => {
+                    next({ error: true, err })
+                    this.error(err)
+                })
+
+        })
+    }
 }
 
 export default new Request()
