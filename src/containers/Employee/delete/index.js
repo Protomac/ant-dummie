@@ -230,7 +230,10 @@ class DeleteEmployee extends React.Component{
           onRow={(record, rowIndex) => {
             return {
               onClick: event => {
-                this.props.history.push('/employee/update')
+                this.props.history.push({
+                  pathname: '/employee/update',
+                  state: {record}
+                })
                 // this.setState({details:true,title:'Update Employee'})
               }, // click row
               
