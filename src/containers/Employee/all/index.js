@@ -22,14 +22,22 @@ class AllEmployee extends React.Component{
     super(props)
   }
   apiRequest = (params)=>{
-    return new Promise(async(resolve)=>{
-      let data = await Request.getAllEmp(params);
-      return data;
+    return new Promise(async (resolve)=>{
+      let data = await Request.getAllEmp({...params, regExFilters: ['emailId','name'] });
+      console.log(data.data)
+      resolve(data.data);
     })
   }
 
   render(){
     const columns = [
+      {
+        title: 'Id',
+        key: 'empId',
+        sorter: true,
+        dataIndex: 'empId',
+        searchTextName: 'empId'
+      },
       {
         title: 'Name',
         key: 'name',
@@ -38,19 +46,73 @@ class AllEmployee extends React.Component{
         searchTextName: 'name'
       },
       {
+        title: 'Gender',
+        key: 'gender',
+        sorter: true,
+        dataIndex: 'gender',
+        filters: [{ text: 'Male', value: 'm' }, { text: 'Female', value: 'f' }]
+      },
+      {
         title: 'Email',
-        dataIndex: 'email',
-        key: 'email'
-      }
+        dataIndex: 'emailId',
+        key: 'emailId',
+        sorter:true,
+        searchTextName : 'emailId'
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+        sorter:true,
+        searchTextName : 'address'
+      },
+      {
+        title: 'Mobile No.',
+        dataIndex: 'mobile',
+        key: 'mobile',
+        sorter:true,
+        searchTextName : 'mobile'
+      },
+      {
+        title: 'Salary',
+        dataIndex: 'salary',
+        key: 'salary',
+        sorter:true,
+        searchTextName : 'salary'
+      },
+      {
+        title: 'Joining Date',
+        dataIndex: 'joiningDate',
+        key: 'joiningDate',
+        sorter:true,
+        searchTextName : 'joiningDate',
+        render: (val)=>{
+          return <div>{moment(val).format('LL')}</div>
+        }
+      },
     ]
     return (
       <PageHeaderWrapper
-        title={'All Users'}>
+        title={'All Employees'}>
 
         <Card bordered={true}>
-          <TableComp columns={columns} apiRequest={this.apiRequest}/>
+          <TableComp columns={columns} apiRequest={(params)=>this.apiRequest(params)}/>
         </Card>
 
       </PageHeaderWrapper>)
   }
 }
+const mapStateToProps = ({ global }) => ({
+  categories: global.categories
+})
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch
+  }
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AllEmployee)

@@ -106,10 +106,24 @@ class Request {
         })
     }
 
+    deleteEmployees(ids){
+        return new Promise((next) =>{
+            authAxios
+                .post('/employee/delete',{ids},getToken())
+                .then((data)=>{
+                    next(data.data)
+                })
+                .catch(err=>{
+                    next({error:true,err})
+                    this.error(err)
+                })
+        })
+    }
+
     getAllEmp(data){
         return new Promise((next) =>{
             authAxios
-                .get('/getAllEmployees',getToken())
+                .get('/getAllEmployees',{params: {...data}},getToken())
                 .then((data)=>{
                     next(data)
                 })
