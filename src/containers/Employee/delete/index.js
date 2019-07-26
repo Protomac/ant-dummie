@@ -217,7 +217,7 @@ class DeleteEmployee extends React.Component{
     
     return (
       <PageHeaderWrapper
-        title={this.state.title}>
+        title={'Employees List'}>
         <Button type="primary" style={{ marginBottom: 16 }} onClick={this.delete} disabled={!hasSelected} loading={tableLoading}>
           Delete
         </Button>
