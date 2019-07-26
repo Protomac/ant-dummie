@@ -424,7 +424,7 @@
                       status: 'done',
                       url: ''.concat(o, '/screenshots/').concat(r.urlSlug, '-').concat(e.name, '.').concat(e.ext)
                     }]
-                  }), a.props.form.setFieldsValue(Object(g.a)({ extraUrls: i }, s)), a.setState({ allFormData: Object(g.a)({ extraUrls: i }, s) })) : a.defaultError()
+                  }), a.props.form.setFields  Value(Object(g.a)({ extraUrls: i }, s)), a.setState({ allFormData: Object(g.a)({ extraUrls: i }, s) })) : a.defaultError()
                 case 7:
                 case'end':
                   return e.stop()

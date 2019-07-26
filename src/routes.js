@@ -3,9 +3,19 @@ import _ from 'lodash'
 import Path from 'path-parser'
 
 import Dashboard from './containers/dashboard'
+import apply from './containers/applyLeave'
 import Undercons from './containers/undercons'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
+import empDashboard from './containers/empDashboard'
+import employeeData from './containers/employeeData'
+import adminDashboard from './containers/adminDashboard'
+import previousAttendance from './containers/adminAttendance/previous'
+import currentAttendance from './containers/adminAttendance/current'
+import overallAttendance from './containers/overallAttendance'
+
+
+import login from './modules/actions/userActions';
 
 const menu = [
   {
@@ -18,6 +28,86 @@ const menu = [
     'authority': [
       'admin',
       'user'
+    ]
+  },
+  {
+    'path': '/empDashboard',
+    'name': 'empDashboard',
+    'icon': 'empDashboard',
+    'key': 'empDashboard',
+    'component': empDashboard,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
+  {
+    'path': '/employeeData',
+    'name': 'employeeData',
+    'icon': 'employeeData',
+    'key': 'employeeData',
+    'component': employeeData,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
+  {
+    'path': '/ApplyLeave/5d36aee5ff6af4290c7f2850',
+    'name': 'ApplyLeave',
+    'icon': 'Apply',
+    'key': 'ApplyLeave',
+    'homepage': true,
+    'component': apply,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
+  {
+    'path': '/overallAttendance',
+    'name': 'overallAttendance',
+    'icon': 'overallAttendance',
+    'key': 'overallAttendance',
+    'component': overallAttendance,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },{
+    'path': '/adminDashboard',
+    'name': 'adminDashboard',
+    'icon': 'adminDashboard',
+    'key': 'adminDashboard',
+    'component': adminDashboard,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
+  {
+    'path': '/adminAttendance',
+    'name': 'adminAttendance',
+    'icon': 'adminAttendance',
+    'key': 'adminAttendance',
+    'component': Undercons,
+    'authority': [
+      'admin',
+      'user'
+    ],
+    'children': [
+      {
+        'path': '/adminAttendance/Previous',
+        'name': 'previous month',
+        'title': ' previous month',
+        'component': previousAttendance
+      },
+      {
+        'path': '/adminAttendance/current',
+        'name': 'current month',
+        'title': 'current month',
+        'component': currentAttendance
+      }
     ]
   },
   {
