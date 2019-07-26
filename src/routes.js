@@ -69,8 +69,6 @@ const menu = [
       },
       {
         'path': '/employee/update',
-        'name': 'Update Employee',
-        'title': 'Update Employee',
         'component': UpdateEmployee
       },
       {
