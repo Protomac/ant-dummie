@@ -73,19 +73,23 @@ class App extends Component {
     super(props)
     this.state = {
       token: localStorage.getItem('token'),
-      user: (localStorage.getItem('user') != 'undefined') ? JSON.parse(localStorage.getItem('user')) : null
+      user: (localStorage.getItem('user') != 'undefined') ? JSON.parse(localStorage.getItem('user')) : null,
+      test: 'mohit'
     }
+    
+    
   }
 
   render () {
 
     const { user } = this.state
-
     return (
       <div>
+        
 
         <Route exact path="/form/basic-formsdf" render={(route) => {
           return (
+            this.props.test,
             <div>
               asdfsdf
               {menuData.map((item, key) => {
@@ -131,6 +135,7 @@ class App extends Component {
               location={window.location}
               menuData={menuData}>
               <Login/>
+              
             </AuthLayout>
           )
         }}/>

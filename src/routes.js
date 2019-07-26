@@ -6,6 +6,9 @@ import Dashboard from './containers/dashboard'
 import Undercons from './containers/undercons'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
+import SaveUsers from './containers/users/save'
+import LeaveList from './containers/admin/leavelist'
+import Report from './containers/admin/report'
 
 const menu = [
   {
@@ -17,9 +20,28 @@ const menu = [
     'component': Dashboard,
     'authority': [
       'admin',
-      'user'
-    ]
+      'emp'
+    ],
+    
   },
+  
+
+    {
+      'path': '/dashboard/leavelist',
+      'name': 'Leave List',
+      'title': 'Leave List',
+      'component': LeaveList,
+      
+    },
+    
+    {
+      'path': '/dashboard/report',
+      'name': 'Report',
+      'title': 'Reort',
+      'component': Report,
+      
+    },
+
   {
     'path': '/users',
     'name': 'Users',
@@ -42,9 +64,17 @@ const menu = [
         'name': 'All Users',
         'title': 'All Users',
         'component': AllUsers
+      },
+      {
+        'path':'/users/save',
+        'name': "Saved Users",
+        'title': 'Saved USers',
+        'component': SaveUsers
+
       }
+
     ]
-  }
+  },
 ]
 
 //<editor-fold desc="Functions Exports">

@@ -28,7 +28,7 @@ class NormalLoginForm extends React.Component {
       if (!err) {
 
         // dispatch(userActions(values))
-
+        console.log("qawdcqa");
         dispatch(showLoader())
 
         let x = await Request.login(values)
