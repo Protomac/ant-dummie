@@ -4,6 +4,8 @@ import Path from 'path-parser'
 
 import Dashboard from './containers/dashboard'
 import Undercons from './containers/undercons'
+import AllCust from './containers/customers/all'
+import AddCust from './containers/customers/add'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
 import AddEmployee from './containers/Employee/add'
