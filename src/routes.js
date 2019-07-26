@@ -10,8 +10,7 @@ import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
 import AddEmployee from './containers/Employee/add'
 import UpdateEmployee from './containers/Employee/update'
-import AllEmployee from './containers/Employee/all'
-import DeleteEmployee from './containers/Employee/delete'
+import AllEmployee from './containers/Employee/delete'
 
 
 const menu = [
@@ -71,22 +70,14 @@ const menu = [
       },
       {
         'path': '/employee/update',
-        'name': 'Update Employee',
-        'title': 'Update Employee',
         'component': UpdateEmployee
       },
       {
-        'path': '/employee/delete',
-        'name': 'Delete Employees',
-        'title': 'Delete Employees',
-        'component': DeleteEmployee
-      },
-      {
-        'path': '/employee/all',
+        'path': '/employees/',
         'name': 'All Employees',
         'title': 'All Employees',
         'component': AllEmployee
-      }
+      },
     ]
   }
 ]

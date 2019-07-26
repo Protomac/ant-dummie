@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react'
 import PageHeaderWrapper from '../../../components/PageHeaderWrapper'
+import Highlighter from 'react-highlight-words';
 import {
-  Form,
+  Icon,
   Select,
   Button,
   Input,
@@ -11,66 +12,14 @@ import {
 import _ from 'lodash'
 import moment from 'moment'
 import { TableComp } from 'sz-react-utils'
-
 import 'react-quill/dist/quill.snow.css'
 import { notification } from 'antd/lib/index'
 import { hideLoader, showLoader } from '../../../modules/actions'
 import Request from '../../../request'
 import { connect } from 'react-redux'
 import { resolve } from 'path';
-const columns = [
-  {
-    title: 'Id',
-    key: 'empId',
-    sorter: true,
-    dataIndex: 'empId',
-  },
-  {
-    title: 'Name',
-    key: 'name',
-    sorter: true,
-    dataIndex: 'name',
-  },
-  {
-    title: 'Gender',
-    key: 'gender',
-    sorter: true,
-    dataIndex: 'gender',
-  },
-  {
-    title: 'Email',
-    dataIndex: 'emailId',
-    key: 'emailId',
-    sorter:true,
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-    sorter:true,
-  },
-  {
-    title: 'Mobile No.',
-    dataIndex: 'mobile',
-    key: 'mobile',
-    sorter:true,
-  },
-  {
-    title: 'Salary',
-    dataIndex: 'salary',
-    key: 'salary',
-    sorter:true,
-  },
-  {
-    title: 'Joining Date',
-    dataIndex: 'joiningDate',
-    key: 'joiningDate',
-    sorter:true,
-    render: (val)=>{
-      return <div>{moment(val).format('LL')}</div>
-    }
-  },
-]
+import { withRouter } from "react-router-dom";
+
 class DeleteEmployee extends React.Component{
   state = {
     selectedRowKeys: [],
@@ -79,9 +28,12 @@ class DeleteEmployee extends React.Component{
     tableLoading: false,
     data:[],
     pagination: {},
+    searchText: '',
   };
   componentDidMount(){
     this.apiRequest()
+    console.log(this.props)
+
   }
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination };
@@ -139,16 +91,133 @@ class DeleteEmployee extends React.Component{
     console.log('selectedRowKeys changed: ', selectedRowKeys,selectedRows);
     this.setState({ selectedRowKeys , selectedRows });
   };
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text => (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[this.state.searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ),
+  });
+  handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    this.setState({ searchText: selectedKeys[0] });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
   render(){
+    const columns = [
+      {
+        title: 'Id',
+        key: 'empId',
+        sorter: true,
+        dataIndex: 'empId',
+        ...this.getColumnSearchProps('empId'),
+      },
+      {
+        title: 'Name',
+        key: 'name',
+        sorter: true,
+        dataIndex: 'name',
+        ...this.getColumnSearchProps('name'),
+      },
+      {
+        title: 'Gender',
+        key: 'gender',
+        sorter: true,
+        dataIndex: 'gender',
+        filters: [{ text: 'Male', value: 'm' }, { text: 'Female', value: 'f' }]
+      },
+      {
+        title: 'Email',
+        dataIndex: 'emailId',
+        key: 'emailId',
+        sorter:true,
+        ...this.getColumnSearchProps('emailId'),
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+        sorter:true,
+        ...this.getColumnSearchProps('address'),
+      },
+      {
+        title: 'Mobile No.',
+        dataIndex: 'mobile',
+        key: 'mobile',
+        sorter:true,
+      },
+      {
+        title: 'Salary',
+        dataIndex: 'salary',
+        key: 'salary',
+        sorter:true,
+      },
+      {
+        title: 'Joining Date',
+        dataIndex: 'joiningDate',
+        key: 'joiningDate',
+        sorter:true,
+        render: (val)=>{
+          return <div>{moment(val).format('LL')}</div>
+        }
+      },
+    ]
     const { tableLoading, selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+    
     return (
       <PageHeaderWrapper
-        title={'Delete Employees'}>
+        title={'Employees List'}>
         <Button type="primary" style={{ marginBottom: 16 }} onClick={this.delete} disabled={!hasSelected} loading={tableLoading}>
           Delete
         </Button>
@@ -158,12 +227,23 @@ class DeleteEmployee extends React.Component{
         <Card bordered={true}>
           <Table rowSelection={rowSelection}
           columns={columns}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: event => {
+                this.props.history.push({
+                  pathname: '/employee/update',
+                  state: {record}
+                })
+                // this.setState({details:true,title:'Update Employee'})
+              }, // click row
+              
+            };
+          }}
           dataSource={this.state.data}
           pagination={this.state.pagination}
           loading={this.state.tableLoading}
           onChange={this.handleTableChange} />
         </Card>
-
       </PageHeaderWrapper>)
   }
 }
@@ -177,7 +257,7 @@ const mapDispatchToProps = dispatch => {
 }
 
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(DeleteEmployee)
+)(DeleteEmployee))

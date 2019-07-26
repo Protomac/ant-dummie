@@ -15,6 +15,7 @@ import { notification } from 'antd/lib/index'
 import { hideLoader, showLoader } from '../../../modules/actions'
 import Request from '../../../request'
 import { connect } from 'react-redux'
+import { withRouter } from "react-router-dom";
 
 // inputSchema.fields
 
@@ -187,7 +188,7 @@ class UpdateEmployee extends PureComponent {
         sm: { span: 20, offset: 4 }
       }
     }
-
+    console.log(this.props);
     return (
       <PageHeaderWrapper
         title={'Update employee details'}
@@ -227,7 +228,7 @@ const mapDispatchToProps = dispatch => {
 }
 
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(UpdateEmployee)
+)(UpdateEmployee))
