@@ -1,5 +1,6 @@
-/* .ant-card {
-    width: 50% !important;
-    position:relative !important;
+.ant-card {
+    /* width: 50% !important;
+    position:relative !important; */
+    height: 100vh;
 }
-     */
+    

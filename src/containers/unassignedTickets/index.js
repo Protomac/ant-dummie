@@ -30,12 +30,22 @@ class UnassignedTickets extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: []
+      apiResponse: {
+        tickets: [],
+        emp: []
+      },
+      selected: {
+        tickets: [],
+        emp: {}
+      }
     }
   }
 
   componentDidMount() {
-    this.apiRequestUnassTicket()
+    this.apiRequestAllEmp({ check: 'emp' }).then(() => {
+      this.apiRequestUnassTicket()
+    })
+    console.log(this.state)
   }
 
   apiRequestUnassTicket = (params) => {
@@ -43,26 +53,46 @@ class UnassignedTickets extends Component {
       let data = await Request.getUnassignedTickets({ ...params, regExFilters: ['status', 'title', 'department', 'priority'] })
       console.log(data.data, "000000000")
       this.setState({
-        data:  data.data
+        apiResponse: {
+          tickets: data.data,
+          emp: this.state.apiResponse.emp
+        }
       })
       resolve(data.data)
     })
   }
 
-  apiRequestAllTicket = (params) => {
+  apiRequestAllEmp = (params) => {
     return new Promise(async (resolve) => {
       let data = await Request.getAllEmployees({ ...params, regExFilters: ['emailId', 'empId'] })
+      console.log(data.data, "000000000")
+      this.setState({
+        apiResponse: {
+          emp: data.data
+        }
+      })
+      resolve(data.data)
+    })
+  }
 
-      console.log(data, "000000000")
-
-      resolve(data)
+  assignToEmp = (params) => {
+    return new Promise(async (resolve) => {
+      let array = []
+      const data = {
+        array: (this.state.selected.tickets && this.state.selected.tickets.map((key)=> {
+          console.log(key)
+          array.push(key._id)
+        }))
+      }
+      console.log(array)
+      resolve()
     })
   }
 
   render() {
     const columnsUnassTicket = [
       {
-        title: 'Status',
+        title: 'S',
         key: 'status',
         dataIndex: 'status',
         searchTextName: 'status',
@@ -84,6 +114,21 @@ class UnassignedTickets extends Component {
         dataIndex: 'priority',
         key: 'priority',
         searchTextName: 'priority',
+        filters: [
+          {
+            text: 'low',
+            value: 'low'
+          },
+          {
+            text: 'medium',
+            value: 'medium'
+          },
+          {
+            text: 'high',
+            value: 'high'
+          },
+        ],
+        onFilter: (value, record) => record.priority.indexOf(value) === 0,
       },
       {
         title: 'Created At',
@@ -111,13 +156,36 @@ class UnassignedTickets extends Component {
 
 
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      tickets: {
+        type: 'checkbox',
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${typeof selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          let selected = {...this.state.selected}
+          selected.tickets = selectedRows
+          console.log(selected)
+          this.setState({...selected})
+          console.log(this.state)
+        },
+        getCheckboxProps: record => ({
+          disabled: record.name === 'Disabled User', // Column configuration not to be checked
+          name: record.name,
+        }),
       },
-      getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
-        name: record.name,
-      }),
+      emp: {
+        type: 'radio',
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          this.setState({
+            selected: {
+              emp: selectedRows
+            }
+          })
+        },
+        getCheckboxProps: record => ({
+          disabled: record.name === 'Disabled User', // Column configuration not to be checked
+          name: record.name,
+        }),
+      }
     }
 
     return (
@@ -125,27 +193,21 @@ class UnassignedTickets extends Component {
         title={'Unassigned Tickets'}>
         <div>
           <Row>
-            <Col span={12}>
+            <Col span={16}>
               <Card bordered={true}>
-              {console.log(async (params) => await this.apiRequestUnassTicket(params))}
-              {/* <TableComp rowSelection={rowSelection} columns={columnsUnassTicket} apiRequest={(params) => this.apiRequestUnassTicket(params)} /> */}
-              <Table rowSelection={rowSelection} columns={columnsUnassTicket} dataSource={this.state.data} />
+                {/* <TableComp rowSelection={rowSelection} columns={columnsUnassTicket} apiRequest={(params) => this.apiRequestUnassTicket(params)} /> */}
+                <Table rowSelection={rowSelection.tickets} columns={columnsUnassTicket} dataSource={this.state.apiResponse.tickets} />
               </Card>
             </Col>
-            <Col span={12}>
+            <Col span={8}>
               <Card bordered={true}>
-                <TableComp columns={columnsAllTicket} apiRequest={(params) => this.apiRequestAllTicket(params)} />
+                <Button type='primary' onClick={this.assignToEmp}>Assign</Button>
+                <Table rowSelection={rowSelection.emp} columns={columnsAllTicket} dataSource={this.state.apiResponse.emp} />
+                {/* <TableComp rowSelection={{type: 'radio'}} columns={columnsAllTicket} apiRequest={(params) => this.apiRequestAllEmp(params)} /> */}
               </Card>
             </Col>
           </Row>
         </div>
-        {/* <Card bordered={true}>
-              <TableComp columns={columnsUnassTicket} apiRequest={(params) => this.apiRequestUnassTicket(params)} />
-          </Card>
-
-          <Card bordered={true}>
-              <TableComp columns={columnsAllTicket} apiRequest={(params) => this.apiRequestAllTicket(params)} />
-          </Card> */}
       </PageHeaderWrapper>)
 
   }
