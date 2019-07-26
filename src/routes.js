@@ -4,11 +4,17 @@ import Path from 'path-parser'
 
 import Dashboard from './containers/dashboard'
 import Undercons from './containers/undercons'
+import AllCust from './containers/customers/all'
+import AddCust from './containers/customers/add'
 import AllUsers from './containers/users/all'
 import AddUsers from './containers/users/add'
 import SaveUsers from './containers/users/save'
 import LeaveList from './containers/admin/leavelist'
 import Report from './containers/admin/report'
+import AddEmployee from './containers/Employee/add'
+import UpdateEmployee from './containers/Employee/update'
+import AllEmployee from './containers/Employee/delete'
+
 
 const menu = [
   {
@@ -21,8 +27,7 @@ const menu = [
     'authority': [
       'admin',
       'emp'
-    ],
-    
+    ]
   },
   
 
@@ -75,6 +80,35 @@ const menu = [
 
     ]
   },
+  {
+    'path': '/employee',
+    'name': 'Employee',
+    'icon': 'user',
+    'key': 'employees',
+    'component': Undercons,
+    'authority': [
+      'admin',
+      'user'
+    ],
+    'children': [
+      {
+        'path': '/employee/add',
+        'name': 'Add Employee',
+        'title': 'Add Employee',
+        'component': AddEmployee
+      },
+      {
+        'path': '/employee/update',
+        'component': UpdateEmployee
+      },
+      {
+        'path': '/employees/',
+        'name': 'All Employees',
+        'title': 'All Employees',
+        'component': AllEmployee
+      },
+    ]
+  }
 ]
 
 //<editor-fold desc="Functions Exports">
