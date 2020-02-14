@@ -54,7 +54,7 @@
     "unique-id-mixin": "^1.0.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpackbar": "^3.1.4",
-    "yarn": "^1.17.3"
+    "yarn": "^1.22.0"
   },
   "browserslist": [
     ">0.2%",
