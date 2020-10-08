@@ -46,20 +46,21 @@ class AllTickets extends Component {
     }
     
     apiRequest = async (params, columns)=>{
-            // console.log(params)
+            console.log(params)
             let leavelist = await Request.leaveList({...params,status:['under review'], regExFilters:['empId']})
             console.log(leavelist)
-            // this.state.data = [...leavelist.data]
+            this.state.data = [...leavelist.data]
             console.log(this.state.data, '000000000000')
             this.setState({data:leavelist.data})          
     }
     apiAction =  (e)=>{
+        const {userInput} = this.state
         return new Promise(async (resolve)=>{
             const id = e.target.parentNode.parentNode.parentNode.children[0].children[1].children[0].innerText
             let innerText = e.target.innerText;
             const input = e.target.parentNode.parentNode.parentNode.getAttribute('data-row-key')
             console.log(input)
-            let data = await Request.adminAction(this.state.userInput[input],innerText,id)
+            let data = await Request.adminAction(userInput[input],innerText,id)
             console.log(data,'11111111111111111111')
             resolve(data)
             this.apiRequest()
@@ -67,7 +68,7 @@ class AllTickets extends Component {
     }
     
         render() {
-            
+            const {data} = this.state
             
         const style = {
             textAlign:'center', 
@@ -173,7 +174,7 @@ class AllTickets extends Component {
                 title={'All Leaves'}>
 
                 <Card bordered={true}>
-                    <TableComp columns={columns} dataSource={this.state.data}/>
+                    <TableComp columns={columns} dataSource={data}/>
                 </Card>
 
             </PageHeaderWrapper>
