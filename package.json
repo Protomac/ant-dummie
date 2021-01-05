@@ -19,7 +19,7 @@
     "@craco/craco": "^3.2.3",
     "@mapbox/react-colorpickr": "^8.1.2",
     "antd": "^3.16.3",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "color": "^3.1.0",
     "connected-react-router": "4.5.0",
     "craco-antd": "^1.9.3",
