@@ -127,11 +127,6 @@ class apply extends PureComponent {
 
   }
 
-  componentDidMount () {
-
-
-  }
-
   render () {
 
     const { submitting } = this.props
@@ -179,7 +174,7 @@ class apply extends PureComponent {
       >
 
         <Card bordered={true}>
-          <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
+          <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
 
             <GetAllFormFields inputSchema={this.inputTypes} formItemLayout={formItemLayout}
                               getFieldDecorator={getFieldDecorator}/>
