@@ -28,7 +28,7 @@
     "immutability-helper": "^2.9.0",
     "lodash-decorators": "^6.0.1",
     "memoize-one": "^5.0.0",
-    "moment": "^2.23.0",
+    "moment": "^2.29.2",
     "path-parser": "^4.2.0",
     "path-to-regexp": "^2.4.0",
     "react": "16.7.0",
