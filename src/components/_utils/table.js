@@ -321,11 +321,6 @@ class TableMain extends Component {
 
         <Table
           bordered
-          {...extraProps}
-          columns={columns}
-          rowKey={record => record._id}
-          size={this.state.size}
-          dataSource={this.state.data}
           pagination={{
             ...this.state.pagination,
             defaultPageSize: 10,
@@ -333,6 +328,12 @@ class TableMain extends Component {
             showSizeChanger: true,
             ...this.props.pagination
           }}
+          {...extraProps}
+          columns={columns}
+          rowKey={record => record._id}
+          size={this.state.size}
+          dataSource={this.state.data}
+          
           onChange={this.handleTableChange}
           loading={this.state.loading}
         />
@@ -360,11 +361,6 @@ class TableMain extends Component {
 
         <Table
           bordered
-          {...extraProps}
-          columns={columns}
-          rowKey={record => record._id}
-          size={this.state.size}
-          dataSource={dataSource}
           pagination={{
             ...this.state.pagination,
             defaultPageSize: 10,
@@ -372,6 +368,12 @@ class TableMain extends Component {
             showSizeChanger: true,
             ...this.props.pagination
           }}
+          {...extraProps}
+          columns={columns}
+          rowKey={record => record._id}
+          size={this.state.size}
+          dataSource={dataSource}
+          
           onChange={() => {
           }}
           loading={this.props.loading}
